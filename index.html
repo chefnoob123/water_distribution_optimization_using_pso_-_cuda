@@ -22,11 +22,7 @@
             --border: #334155;
         }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
             font-family: 'Inter', sans-serif;
@@ -60,14 +56,8 @@
             justify-content: center;
         }
 
-        .logo h1 {
-            font-size: 1.25rem;
-            font-weight: 600;
-        }
-
-        .logo span {
-            color: var(--primary);
-        }
+        .logo h1 { font-size: 1.25rem; font-weight: 600; }
+        .logo span { color: var(--primary); }
 
         .status-badge {
             display: flex;
@@ -80,12 +70,21 @@
             font-size: 0.875rem;
         }
 
+        .status-badge.inactive {
+            background: rgba(239, 68, 68, 0.1);
+            border-color: var(--danger);
+        }
+
         .status-dot {
             width: 8px;
             height: 8px;
             background: var(--success);
             border-radius: 50%;
             animation: pulse 2s infinite;
+        }
+
+        .status-badge.inactive .status-dot {
+            background: var(--danger);
         }
 
         @keyframes pulse {
@@ -101,7 +100,7 @@
 
         .grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
             gap: 1.5rem;
             margin-bottom: 2rem;
         }
@@ -114,10 +113,7 @@
             transition: all 0.3s ease;
         }
 
-        .card:hover {
-            background: var(--bg-card-hover);
-            transform: translateY(-2px);
-        }
+        .card:hover { background: var(--bg-card-hover); }
 
         .card-header {
             display: flex;
@@ -168,14 +164,10 @@
             box-shadow: 0 4px 20px rgba(14, 165, 233, 0.4);
         }
 
-        .btn-secondary {
-            background: var(--bg-card-hover);
-            color: var(--text);
-            border: 1px solid var(--border);
-        }
-
-        .btn-secondary:hover {
-            background: var(--border);
+        .btn-primary:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
         }
 
         .controls {
@@ -183,6 +175,7 @@
             gap: 1rem;
             flex-wrap: wrap;
             margin-bottom: 2rem;
+            align-items: flex-end;
         }
 
         .control-group {
@@ -216,14 +209,8 @@
             border: 1px solid var(--border);
             border-radius: 16px;
             padding: 1.5rem;
-            height: 500px;
+            height: 450px;
             position: relative;
-            overflow: hidden;
-        }
-
-        .network-canvas {
-            width: 100%;
-            height: 100%;
         }
 
         .tabs {
@@ -233,13 +220,14 @@
         }
 
         .tab {
-            padding: 0.75rem 1.5rem;
+            padding: 0.5rem 1rem;
             background: transparent;
             border: 1px solid var(--border);
-            border-radius: 8px;
+            border-radius: 6px;
             color: var(--text-muted);
             cursor: pointer;
             transition: all 0.2s ease;
+            font-size: 0.875rem;
         }
 
         .tab.active {
@@ -248,15 +236,13 @@
             color: white;
         }
 
-        .tab:hover:not(.active) {
-            background: var(--bg-card-hover);
-        }
+        .tab:hover:not(.active) { background: var(--bg-card-hover); }
 
         .progress-bar {
             width: 100%;
-            height: 8px;
+            height: 6px;
             background: var(--bg-card-hover);
-            border-radius: 4px;
+            border-radius: 3px;
             overflow: hidden;
             margin-top: 1rem;
         }
@@ -264,14 +250,14 @@
         .progress-fill {
             height: 100%;
             background: linear-gradient(90deg, var(--primary), var(--secondary));
-            border-radius: 4px;
+            border-radius: 3px;
             transition: width 0.3s ease;
         }
 
         .loading-overlay {
             position: absolute;
             inset: 0;
-            background: rgba(15, 23, 42, 0.9);
+            background: rgba(15, 23, 42, 0.95);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -281,6 +267,7 @@
             opacity: 0;
             pointer-events: none;
             transition: opacity 0.3s ease;
+            z-index: 10;
         }
 
         .loading-overlay.active {
@@ -297,9 +284,7 @@
             animation: spin 1s linear infinite;
         }
 
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
+        @keyframes spin { to { transform: rotate(360deg); } }
 
         .console-output {
             background: #0a0a0a;
@@ -313,11 +298,7 @@
             color: #10b981;
         }
 
-        .console-line {
-            margin: 0.25rem 0;
-            opacity: 0.8;
-        }
-
+        .console-line { margin: 0.25rem 0; opacity: 0.8; }
         .console-line.warning { color: var(--warning); }
         .console-line.error { color: var(--danger); }
         .console-line.info { color: var(--primary); }
@@ -339,23 +320,17 @@
             font-weight: 500;
         }
 
-        .results-table tr:hover {
-            background: var(--bg-card-hover);
+        .results-table tr:hover { background: var(--bg-card-hover); }
+
+        .canvas-container {
+            height: 350px;
+            position: relative;
         }
 
         @media (max-width: 768px) {
-            .header {
-                flex-direction: column;
-                gap: 1rem;
-            }
-            
-            .controls {
-                flex-direction: column;
-            }
-            
-            .control-group input, .control-group select {
-                width: 100%;
-            }
+            .header { flex-direction: column; gap: 1rem; }
+            .controls { flex-direction: column; }
+            .control-group input, .control-group select { width: 100%; }
         }
     </style>
 </head>
@@ -371,9 +346,9 @@
             </div>
             <h1>Water Network <span>Optimizer</span></h1>
         </div>
-        <div class="status-badge">
+        <div class="status-badge" id="cudaStatus">
             <span class="status-dot"></span>
-            CUDA Available
+            <span id="cudaText">CUDA Available</span>
         </div>
     </header>
 
@@ -384,7 +359,6 @@
                 <select id="networkSelect">
                     <option value="anytown">Anytown (22 nodes)</option>
                     <option value="balerma">Balerma (50 nodes)</option>
-                    <option value="synthetic">Synthetic (20 nodes)</option>
                 </select>
             </div>
             <div class="control-group">
@@ -399,8 +373,15 @@
                 <label>Sub-swarms</label>
                 <input type="number" id="subswarms" value="4" min="1" max="16">
             </div>
-            <div class="control-group" style="justify-content: flex-end;">
-                <button class="btn btn-primary" onclick="runOptimization()">
+            <div class="control-group">
+                <label>CUDA</label>
+                <select id="useCuda">
+                    <option value="true">Enabled</option>
+                    <option value="false">Disabled</option>
+                </select>
+            </div>
+            <div class="control-group">
+                <button class="btn btn-primary" id="runBtn" onclick="runOptimization()">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <polygon points="5 3 19 12 5 21 5 3"/>
                     </svg>
@@ -412,62 +393,51 @@
         <div class="grid">
             <div class="card">
                 <div class="card-header">
-                    <span class="card-title">Total Cost</span>
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2">
-                        <circle cx="12" cy="12" r="10"/>
-                        <path d="M12 6v12M8 10h8M8 14h8"/>
-                    </svg>
+                    <span class="card-title">Original Cost</span>
                 </div>
-                <div class="stat-value" id="totalCost">1,247,800</div>
-                <div class="stat-label">Original design cost</div>
+                <div class="stat-value" id="originalCost">---</div>
+                <div class="stat-label">Initial design</div>
             </div>
             <div class="card">
                 <div class="card-header">
                     <span class="card-title">Optimized Cost</span>
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--success)" stroke-width="2">
-                        <polyline points="20 6 9 17 4 12"/>
-                    </svg>
                 </div>
-                <div class="stat-value" id="optimizedCost">1,051,700</div>
-                <div class="stat-label" style="color: var(--success);">15.7% reduction</div>
+                <div class="stat-value" id="optimizedCost">---</div>
+                <div class="stat-label" id="improvementLabel">Run to optimize</div>
             </div>
             <div class="card">
                 <div class="card-header">
                     <span class="card-title">Computation Time</span>
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--warning)" stroke-width="2">
-                        <circle cx="12" cy="12" r="10"/>
-                        <polyline points="12 6 12 12 16 14"/>
-                    </svg>
                 </div>
-                <div class="stat-value" id="computeTime">2.34s</div>
-                <div class="stat-label">PSO + CUDA</div>
+                <div class="stat-value" id="computeTime">---</div>
+                <div class="stat-label" id="cudaLabel">PSO + CUDA</div>
             </div>
             <div class="card">
                 <div class="card-header">
                     <span class="card-title">Min Pressure</span>
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--secondary)" stroke-width="2">
-                        <path d="M12 2v20M2 12h20"/>
-                    </svg>
                 </div>
-                <div class="stat-value" id="minPressure">15.8m</div>
-                <div class="stat-label" style="color: var(--success);">Above threshold</div>
+                <div class="stat-value" id="minPressure">---</div>
+                <div class="stat-label" id="pressureLabel">Run to calculate</div>
             </div>
         </div>
 
         <div class="grid" style="grid-template-columns: 2fr 1fr;">
             <div class="network-viz">
                 <div class="card-header">
-                    <span class="card-title">Network Topology</span>
+                    <span class="card-title">Visualization</span>
                     <div class="tabs">
                         <button class="tab active" onclick="switchTab('topology')">Topology</button>
                         <button class="tab" onclick="switchTab('convergence')">Convergence</button>
                         <button class="tab" onclick="switchTab('diameters')">Diameters</button>
                     </div>
                 </div>
-                <canvas id="networkCanvas"></canvas>
+                <div class="canvas-container">
+                    <canvas id="mainCanvas"></canvas>
+                </div>
                 <div class="loading-overlay" id="loadingOverlay">
                     <div class="spinner"></div>
                     <span>Running optimization...</span>
+                    <div style="font-size: 0.875rem; color: var(--text-muted);" id="loadingStatus">Initializing...</div>
                 </div>
             </div>
             <div>
@@ -475,11 +445,7 @@
                     <div class="card-header">
                         <span class="card-title">Console Output</span>
                     </div>
-                    <div class="console-output" id="consoleOutput">
-                        <div class="console-line info">[System] Water Network Optimizer v1.0</div>
-                        <div class="console-line info">[System] CUDA GPU detected</div>
-                        <div class="console-line info">[System] Ready to optimize</div>
-                    </div>
+                    <div class="console-output" id="consoleOutput"></div>
                     <div class="progress-bar">
                         <div class="progress-fill" id="progressFill" style="width: 0%"></div>
                     </div>
@@ -494,144 +460,243 @@
             <table class="results-table">
                 <thead>
                     <tr>
-                        <th>Pipe ID</th>
+                        <th>Pipe</th>
                         <th>Original (mm)</th>
                         <th>Optimized (mm)</th>
                         <th>Change</th>
-                        <th>Cost Impact</th>
                     </tr>
                 </thead>
                 <tbody id="resultsBody">
+                    <tr><td colspan="4" style="text-align: center; color: var(--text-muted);">Run optimization to see results</td></tr>
                 </tbody>
             </table>
         </div>
     </div>
 
     <script>
-        let networkChart = null;
-        let convergenceChart = null;
-        let diametersChart = null;
+        let mainChart = null;
+        let currentTab = 'topology';
+        let lastResult = null;
+        let pollInterval = null;
 
-        const sampleData = {
-            anytown: {
-                nodes: 22,
-                pipes: 21,
-                originalCost: 1247800,
-                optimizedCost: 1051700,
-                improvement: 15.7,
-                time: 2.34,
-                minPressure: 15.8,
-                diameters: [
-                    { original: 406.4, optimized: 380.2 },
-                    { original: 304.8, optimized: 285.4 },
-                    { original: 254.0, optimized: 240.1 },
-                    { original: 254.0, optimized: 220.5 },
-                    { original: 203.2, optimized: 190.3 },
-                    { original: 203.2, optimized: 175.8 },
-                    { original: 152.4, optimized: 140.2 },
-                    { original: 152.4, optimized: 130.5 },
-                    { original: 101.6, optimized: 95.4 },
-                    { original: 101.6, optimized: 90.2 },
-                    { original: 101.6, optimized: 88.5 },
-                    { original: 101.6, optimized: 85.3 },
-                    { original: 101.6, optimized: 80.1 },
-                    { original: 101.6, optimized: 78.5 },
-                    { original: 76.2, optimized: 72.4 },
-                    { original: 203.2, optimized: 195.3 },
-                    { original: 152.4, optimized: 145.2 },
-                    { original: 152.4, optimized: 138.7 },
-                    { original: 152.4, optimized: 130.5 },
-                    { original: 101.6, optimized: 95.8 },
-                    { original: 101.6, optimized: 92.3 }
-                ]
-            }
-        };
+        const API_URL = 'http://localhost:5000';
 
         function log(message, type = 'info') {
             const consoleDiv = document.getElementById('consoleOutput');
             const line = document.createElement('div');
             line.className = `console-line ${type}`;
-            line.textContent = `[${new Date().toLocaleTimeString()}] ${message}`;
+            const time = new Date().toLocaleTimeString();
+            line.textContent = `[${time}] ${message}`;
             consoleDiv.appendChild(line);
             consoleDiv.scrollTop = consoleDiv.scrollHeight;
         }
 
-        function updateStats(data) {
-            document.getElementById('totalCost').textContent = data.originalCost.toLocaleString();
-            document.getElementById('optimizedCost').textContent = data.optimizedCost.toLocaleString();
-            document.getElementById('computeTime').textContent = data.time + 's';
-            document.getElementById('minPressure').textContent = data.minPressure + 'm';
-            
-            const label = document.querySelector('#optimizedCost + .stat-label');
-            label.textContent = data.improvement.toFixed(1) + '% reduction';
-            label.style.color = 'var(--success)';
+        async function checkHealth() {
+            try {
+                const res = await fetch(`${API_URL}/api/health`);
+                const data = await res.json();
+                if (data.status === 'ok') {
+                    log('Connected to backend', 'success');
+                    return true;
+                }
+            } catch (e) {
+                log('Backend not running - using demo mode', 'warning');
+            }
+            return false;
         }
 
-        function updateTable(diameters) {
+        async function runOptimization() {
+            const btn = document.getElementById('runBtn');
+            const overlay = document.getElementById('loadingOverlay');
+            const progress = document.getElementById('progressFill');
+            const loadingStatus = document.getElementById('loadingStatus');
+
+            btn.disabled = true;
+            overlay.classList.add('active');
+            progress.style.width = '0%';
+
+            const params = {
+                network: document.getElementById('networkSelect').value,
+                particles: parseInt(document.getElementById('particles').value),
+                iterations: parseInt(document.getElementById('iterations').value),
+                subswarms: parseInt(document.getElementById('subswarms').value),
+                use_cuda: document.getElementById('useCuda').value === 'true'
+            };
+
+            log(`Starting optimization...`, 'info');
+            log(`Network: ${params.network}, Particles: ${params.particles}`, 'info');
+            log(`Iterations: ${params.iterations}, CUDA: ${params.use_cuda}`, 'info');
+
+            loadingStatus.textContent = 'Sending request to backend...';
+
+            try {
+                const res = await fetch(`${API_URL}/api/optimize`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(params)
+                });
+
+                if (!res.ok) throw new Error('Request failed');
+
+                log('Optimization started on backend', 'success');
+
+                loadingStatus.textContent = 'Processing...';
+                
+                for (let i = 0; i <= 100; i += 2) {
+                    progress.style.width = i + '%';
+                    await new Promise(r => setTimeout(r, params.iterations > 50 ? 30 : 15));
+                }
+
+                let attempts = 0;
+                const maxAttempts = 50;
+                
+                const pollResult = async () => {
+                    attempts++;
+                    loadingStatus.textContent = `Fetching results... (${attempts}/${maxAttempts})`;
+                    
+                    try {
+                        const res = await fetch(`${API_URL}/api/result`);
+                        const data = await res.json();
+                        
+                        if (data.status === 'processing') {
+                            if (attempts < maxAttempts) {
+                                setTimeout(pollResult, 200);
+                            } else {
+                                log('Timeout waiting for results', 'error');
+                                overlay.classList.remove('active');
+                                btn.disabled = false;
+                            }
+                            return;
+                        }
+                        
+                        if (data.success) {
+                            lastResult = data;
+                            displayResults(data);
+                            log('Optimization complete!', 'success');
+                            log(`Cost: ${data.optimized_cost.toLocaleString()} (${data.improvement.toFixed(1)}% reduction)`, 'success');
+                            log(`Time: ${data.optimization_time.toFixed(2)}s`, 'success');
+                        } else {
+                            log(`Error: ${data.error}`, 'error');
+                        }
+                    } catch (e) {
+                        log(`Error: ${e.message}`, 'error');
+                    }
+                    
+                    overlay.classList.remove('active');
+                    btn.disabled = false;
+                    progress.style.width = '0%';
+                };
+
+                pollResult();
+
+            } catch (e) {
+                log(`Error: ${e.message}`, 'error');
+                overlay.classList.remove('active');
+                btn.disabled = false;
+                progress.style.width = '0%';
+            }
+        }
+
+        function displayResults(data) {
+            document.getElementById('originalCost').textContent = data.original_cost.toLocaleString();
+            document.getElementById('optimizedCost').textContent = data.optimized_cost.toLocaleString();
+            document.getElementById('computeTime').textContent = data.optimization_time.toFixed(2) + 's';
+            document.getElementById('minPressure').textContent = data.min_pressure.toFixed(1) + 'm';
+            
+            const impLabel = document.getElementById('improvementLabel');
+            impLabel.textContent = `-${data.improvement.toFixed(1)}% improvement`;
+            impLabel.style.color = 'var(--success)';
+            
+            document.getElementById('cudaLabel').textContent = data.use_cuda ? 'PSO + CUDA' : 'PSO (CPU)';
+
+            const cudaStatus = document.getElementById('cudaStatus');
+            const cudaText = document.getElementById('cudaText');
+            if (data.use_cuda) {
+                cudaStatus.classList.remove('inactive');
+                cudaText.textContent = 'CUDA Active';
+            } else {
+                cudaStatus.classList.add('inactive');
+                cudaText.textContent = 'CPU Mode';
+            }
+
+            updateTable(data.best_diameters, data.original_diameters);
+
+            if (data.convergence_history) {
+                drawConvergence(data.convergence_history);
+            }
+            if (data.best_diameters && data.original_diameters) {
+                drawDiameters(data.best_diameters, data.original_diameters);
+            }
+        }
+
+        function updateTable(optimized, original) {
             const tbody = document.getElementById('resultsBody');
             tbody.innerHTML = '';
             
-            diameters.forEach((d, i) => {
-                const change = ((d.optimized - d.original) / d.original * 100).toFixed(1);
-                const costImpact = Math.abs(d.optimized - d.original) * 457.2 * 100 / 1000;
-                
+            for (let i = 0; i < optimized.length; i++) {
+                const change = ((optimized[i] - original[i]) / original[i] * 100).toFixed(1);
                 const row = document.createElement('tr');
                 row.innerHTML = `
                     <td>Pipe ${i + 1}</td>
-                    <td>${d.original.toFixed(1)}</td>
-                    <td style="color: var(--success); font-weight: 600;">${d.optimized.toFixed(1)}</td>
+                    <td>${original[i].toFixed(1)}</td>
+                    <td style="color: var(--success); font-weight: 600;">${optimized[i].toFixed(1)}</td>
                     <td style="color: ${change < 0 ? 'var(--success)' : 'var(--warning)'}">${change > 0 ? '+' : ''}${change}%</td>
-                    <td>$${costImpact.toFixed(0)}</td>
                 `;
                 tbody.appendChild(row);
-            });
+            }
+        }
+
+        function switchTab(tab) {
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            event.target.classList.add('active');
+            currentTab = tab;
+            
+            if (tab === 'topology') drawNetworkTopology();
+            else if (tab === 'convergence' && lastResult?.convergence_history) 
+                drawConvergence(lastResult.convergence_history);
+            else if (tab === 'diameters' && lastResult?.best_diameters)
+                drawDiameters(lastResult.best_diameters, lastResult.original_diameters);
         }
 
         function drawNetworkTopology() {
-            const canvas = document.getElementById('networkCanvas');
+            const canvas = document.getElementById('mainCanvas');
             const ctx = canvas.getContext('2d');
+            const rect = canvas.parentElement.getBoundingClientRect();
             
-            canvas.width = canvas.offsetWidth * 2;
-            canvas.height = canvas.offsetHeight * 2;
+            canvas.width = rect.width * 2;
+            canvas.height = rect.height * 2;
             ctx.scale(2, 2);
             
             ctx.fillStyle = '#1e293b';
-            ctx.fillRect(0, 0, canvas.offsetWidth, canvas.offsetHeight);
+            ctx.fillRect(0, 0, rect.width, rect.height);
             
-            const centerX = canvas.offsetWidth / 2;
-            const centerY = canvas.offsetHeight / 2;
+            const centerX = rect.width / 2;
             
             const nodes = [
-                { x: centerX, y: 50, type: 'reservoir' },
-                { x: centerX - 150, y: 120, type: 'demand' },
-                { x: centerX, y: 120, type: 'demand' },
-                { x: centerX + 150, y: 120, type: 'demand' },
-                { x: centerX - 200, y: 190, type: 'demand' },
-                { x: centerX - 100, y: 190, type: 'demand' },
-                { x: centerX, y: 190, type: 'demand' },
-                { x: centerX + 100, y: 190, type: 'demand' },
-                { x: centerX + 200, y: 190, type: 'demand' },
-                { x: centerX - 250, y: 260, type: 'demand' },
-                { x: centerX - 175, y: 260, type: 'demand' },
-                { x: centerX - 100, y: 260, type: 'demand' },
-                { x: centerX - 25, y: 260, type: 'demand' },
-                { x: centerX + 50, y: 260, type: 'demand' },
-                { x: centerX + 125, y: 260, type: 'demand' },
-                { x: centerX + 200, y: 260, type: 'demand' },
-                { x: centerX - 150, y: 330, type: 'demand' },
-                { x: centerX, y: 330, type: 'demand' },
-                { x: centerX + 150, y: 330, type: 'demand' }
+                { x: centerX, y: 40, type: 'reservoir' },
+                { x: centerX - 100, y: 90, type: 'demand' },
+                { x: centerX, y: 90, type: 'demand' },
+                { x: centerX + 100, y: 90, type: 'demand' },
+                { x: centerX - 140, y: 140, type: 'demand' },
+                { x: centerX - 60, y: 140, type: 'demand' },
+                { x: centerX + 20, y: 140, type: 'demand' },
+                { x: centerX + 100, y: 140, type: 'demand' },
+                { x: centerX - 120, y: 190, type: 'demand' },
+                { x: centerX - 40, y: 190, type: 'demand' },
+                { x: centerX + 40, y: 190, type: 'demand' },
+                { x: centerX + 120, y: 190, type: 'demand' },
+                { x: centerX - 80, y: 240, type: 'demand' },
+                { x: centerX, y: 240, type: 'demand' },
+                { x: centerX + 80, y: 240, type: 'demand' }
             ];
             
             const edges = [
-                [0, 1], [0, 2], [0, 3],
-                [1, 4], [1, 5], [2, 6], [3, 7], [3, 8],
-                [4, 9], [5, 10], [6, 11], [6, 12], [7, 13], [8, 15],
-                [10, 16], [12, 17], [13, 18]
+                [0,1],[0,2],[0,3],[1,4],[1,5],[2,6],[3,7],
+                [4,8],[5,9],[6,10],[7,11],[8,12],[10,13],[11,14]
             ];
             
             ctx.strokeStyle = '#334155';
-            ctx.lineWidth = 3;
+            ctx.lineWidth = 2;
             edges.forEach(([a, b]) => {
                 ctx.beginPath();
                 ctx.moveTo(nodes[a].x, nodes[a].y);
@@ -641,72 +706,49 @@
             
             nodes.forEach((node, i) => {
                 ctx.beginPath();
-                ctx.arc(node.x, node.y, node.type === 'reservoir' ? 15 : 8, 0, Math.PI * 2);
-                
-                if (node.type === 'reservoir') {
-                    const gradient = ctx.createRadialGradient(node.x, node.y, 0, node.x, node.y, 15);
-                    gradient.addColorStop(0, '#10b981');
-                    gradient.addColorStop(1, '#059669');
-                    ctx.fillStyle = gradient;
-                } else {
-                    ctx.fillStyle = '#6366f1';
-                }
+                ctx.arc(node.x, node.y, node.type === 'reservoir' ? 12 : 6, 0, Math.PI * 2);
+                ctx.fillStyle = node.type === 'reservoir' ? '#10b981' : '#6366f1';
                 ctx.fill();
                 
                 ctx.fillStyle = '#f8fafc';
-                ctx.font = 'bold 10px Inter';
+                ctx.font = 'bold 8px Inter';
                 ctx.textAlign = 'center';
                 ctx.textBaseline = 'middle';
                 ctx.fillText(i.toString(), node.x, node.y);
             });
             
             ctx.fillStyle = '#94a3b8';
-            ctx.font = '12px Inter';
-            ctx.fillText('Reservoir', centerX, 30);
-            ctx.beginPath();
-            ctx.arc(centerX - 40, 26, 6, 0, Math.PI * 2);
-            ctx.fillStyle = '#10b981';
-            ctx.fill();
+            ctx.font = '10px Inter';
+            ctx.fillText('Reservoir', centerX, 20);
         }
 
-        function drawConvergence() {
-            const ctx = document.getElementById('networkCanvas').getContext('2d');
-            const canvas = document.getElementById('networkCanvas');
+        function drawConvergence(history) {
+            const canvas = document.getElementById('mainCanvas');
+            const ctx = canvas.getContext('2d');
+            const rect = canvas.parentElement.getBoundingClientRect();
             
-            canvas.width = canvas.offsetWidth * 2;
-            canvas.height = canvas.offsetHeight * 2;
+            if (mainChart) mainChart.destroy();
             
-            if (convergenceChart) {
-                convergenceChart.destroy();
-            }
+            const flatHistory = history.flat ? history.flat() : history;
             
-            const labels = Array.from({length: 100}, (_, i) => i + 1);
-            const data = labels.map(i => {
-                const base = 1050000;
-                const decay = Math.exp(-i / 25);
-                const noise = Math.random() * 50000 * decay;
-                return base + noise + 200000 * decay;
-            });
-            
-            convergenceChart = new Chart(ctx, {
+            mainChart = new Chart(ctx, {
                 type: 'line',
                 data: {
-                    labels: labels,
+                    labels: flatHistory.map((_, i) => i + 1),
                     datasets: [{
-                        label: 'Fitness',
-                        data: data,
+                        label: 'Best Fitness',
+                        data: flatHistory,
                         borderColor: '#0ea5e9',
                         backgroundColor: 'rgba(14, 165, 233, 0.1)',
                         fill: true,
-                        tension: 0.4
+                        tension: 0.4,
+                        pointRadius: 0
                     }]
                 },
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
-                    plugins: {
-                        legend: { display: false }
-                    },
+                    plugins: { legend: { display: false } },
                     scales: {
                         x: { 
                             title: { display: true, text: 'Iteration', color: '#94a3b8' },
@@ -723,32 +765,30 @@
             });
         }
 
-        function drawDiameters() {
-            const ctx = document.getElementById('networkCanvas').getContext('2d');
-            const canvas = document.getElementById('networkCanvas');
+        function drawDiameters(optimized, original) {
+            const canvas = document.getElementById('mainCanvas');
+            const ctx = canvas.getContext('2d');
+            const rect = canvas.parentElement.getBoundingClientRect();
             
-            if (diametersChart) {
-                diametersChart.destroy();
-            }
+            if (mainChart) mainChart.destroy();
             
-            const data = sampleData.anytown.diameters;
-            const labels = data.map((_, i) => `P${i + 1}`);
+            const labels = optimized.map((_, i) => `P${i + 1}`);
             
-            diametersChart = new Chart(ctx, {
+            mainChart = new Chart(ctx, {
                 type: 'bar',
                 data: {
                     labels: labels,
                     datasets: [
                         {
                             label: 'Original',
-                            data: data.map(d => d.original),
+                            data: original,
                             backgroundColor: 'rgba(239, 68, 68, 0.7)',
                             borderColor: '#ef4444',
                             borderWidth: 1
                         },
                         {
                             label: 'Optimized',
-                            data: data.map(d => d.optimized),
+                            data: optimized,
                             backgroundColor: 'rgba(16, 185, 129, 0.7)',
                             borderColor: '#10b981',
                             borderWidth: 1
@@ -759,14 +799,12 @@
                     responsive: true,
                     maintainAspectRatio: false,
                     plugins: {
-                        legend: { 
-                            labels: { color: '#94a3b8' }
-                        }
+                        legend: { labels: { color: '#94a3b8' } }
                     },
                     scales: {
                         x: { 
                             grid: { color: '#334155' },
-                            ticks: { color: '#94a3b8' }
+                            ticks: { color: '#94a3b8', maxRotation: 45, minRotation: 45 }
                         },
                         y: { 
                             title: { display: true, text: 'Diameter (mm)', color: '#94a3b8' },
@@ -778,59 +816,12 @@
             });
         }
 
-        function switchTab(tab) {
-            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-            event.target.classList.add('active');
-            
-            if (tab === 'topology') {
-                drawNetworkTopology();
-            } else if (tab === 'convergence') {
-                drawConvergence();
-            } else if (tab === 'diameters') {
-                drawDiameters();
-            }
-        }
-
-        async function runOptimization() {
-            const overlay = document.getElementById('loadingOverlay');
-            const progress = document.getElementById('progressFill');
-            
-            overlay.classList.add('active');
-            log('Starting optimization...', 'info');
-            
-            const particles = document.getElementById('particles').value;
-            const iterations = document.getElementById('iterations').value;
-            const network = document.getElementById('networkSelect').value;
-            
-            log(`Network: ${network}`, 'info');
-            log(`Particles: ${particles}`, 'info');
-            log(`Iterations: ${iterations}`, 'info');
-            
-            for (let i = 0; i <= 100; i += 5) {
-                await new Promise(resolve => setTimeout(resolve, 50));
-                progress.style.width = i + '%';
-                
-                if (i === 20) log('Initializing CUDA kernel...', 'warning');
-                if (i === 40) log('Evaluating fitness function...', 'warning');
-                if (i === 60) log('Updating particle positions...', 'warning');
-                if (i === 80) log('Converging to optimal solution...', 'warning');
-            }
-            
-            log('Optimization complete!', 'success');
-            log(`Best fitness: 1,051,700`, 'success');
-            log(`Improvement: 15.7%`, 'success');
-            
-            overlay.classList.remove('active');
-            progress.style.width = '0%';
-        }
-
         window.addEventListener('resize', () => {
-            drawNetworkTopology();
+            if (currentTab === 'topology') drawNetworkTopology();
         });
 
-        document.addEventListener('DOMContentLoaded', () => {
-            updateStats(sampleData.anytown);
-            updateTable(sampleData.anytown.diameters);
+        document.addEventListener('DOMContentLoaded', async () => {
+            await checkHealth();
             drawNetworkTopology();
         });
     </script>
