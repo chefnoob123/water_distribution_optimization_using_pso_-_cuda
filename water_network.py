@@ -243,11 +243,12 @@ class WaterNetwork:
         pipe_cost = np.sum(diameters * pipe_lengths * 100.0)
 
         pressure_penalty = 0.0
+        min_pressure = 15.0
         for node in self.demand_nodes:
             if node < len(head):
                 pressure = head[node] - self.node_elevations[node]
-                if pressure < 10.0:
-                    pressure_penalty += (10.0 - pressure) * 1000.0
+                if pressure < min_pressure:
+                    pressure_penalty += (min_pressure - pressure) * 1000.0
                 elif pressure > 60.0:
                     pressure_penalty += (pressure - 60.0) * 100.0
 

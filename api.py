@@ -76,11 +76,12 @@ def create_fitness_function(network):
 
         pressure_penalty = 0.0
         min_pressure = 15.0
+        penalty_factor = 10000.0
         for node in demand_nodes:
             if node < len(head):
                 pressure = head[node] - elevations[node]
                 if pressure < min_pressure:
-                    pressure_penalty += (min_pressure - pressure) * 1000.0
+                    pressure_penalty += (min_pressure - pressure) * penalty_factor
 
         return pipe_cost + pressure_penalty
 
@@ -101,6 +102,9 @@ def run_optimization_async(network_name, particles, iterations, subswarms, use_c
 
         original_diams = network.get_original_diameters()
         original_fitness, original_details = network.evaluate_fitness(original_diams)
+
+        pipe_lengths = network.get_pipe_lengths()
+        original_cost = float(np.sum(original_diams * pipe_lengths * 100.0))
 
         if subswarms > 1:
             pso = ParallelPSO(
@@ -128,14 +132,17 @@ def run_optimization_async(network_name, particles, iterations, subswarms, use_c
         best_diameters, best_fitness = pso.optimize(fitness_func, bounds, verbose=False)
         optimization_time = time.time() - start_time
 
-        optimized_fitness, details = network.evaluate_fitness(best_diameters)
+        _, details = network.evaluate_fitness(best_diameters)
+
+        pipe_lengths = network.get_pipe_lengths()
+        optimized_cost = float(np.sum(best_diameters * pipe_lengths * 100.0))
 
         result = {
             "success": True,
-            "original_cost": float(original_fitness),
-            "optimized_cost": float(optimized_fitness),
+            "original_cost": original_cost,
+            "optimized_cost": optimized_cost,
             "improvement": float(
-                (original_fitness - optimized_fitness) / original_fitness * 100
+                (original_cost - optimized_cost) / original_cost * 100
             ),
             "optimization_time": float(optimization_time),
             "min_pressure": float(
