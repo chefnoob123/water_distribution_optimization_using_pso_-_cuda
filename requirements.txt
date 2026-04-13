@@ -1,0 +1,4 @@
+numpy
+numba>=0.55.0
+matplotlib
+networkx

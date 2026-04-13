@@ -1,0 +1,175 @@
+[TITLE]
+AnyTown Network - Classic Optimization Benchmark
+
+[JUNCTIONS]
+;ID	Elev	Demand
+0	213.4	0.0
+1	213.4	9.8
+2	219.5	9.4
+3	222.5	9.6
+4	225.6	9.8
+5	228.6	10.0
+6	231.7	10.2
+7	234.7	10.4
+8	237.8	10.6
+9	240.8	10.8
+10	243.8	11.0
+11	246.9	11.2
+12	249.9	11.4
+13	253.0	11.6
+14	256.0	11.8
+15	259.1	12.0
+16	225.6	22.7
+17	228.6	22.9
+18	231.7	23.1
+19	231.7	23.3
+20	234.7	23.5
+21	237.8	23.7
+
+[RESERVOIRS]
+;ID	Head
+0	260.0
+
+[TANKS]
+;ID	Elevation	MinLevel	MaxLevel	Diameter	MinVol
+
+[PIPES]
+;ID	Node1	Node2	Length	Diameter	Roughness
+1	0	1	914.4	406.4	100
+2	1	2	457.2	304.8	100
+3	2	3	457.2	254.0	100
+4	3	4	457.2	254.0	100
+5	4	5	457.2	203.2	100
+6	5	6	457.2	203.2	100
+7	6	7	457.2	152.4	100
+8	7	8	457.2	152.4	100
+9	8	9	457.2	101.6	100
+10	9	10	457.2	101.6	100
+11	10	11	457.2	101.6	100
+12	11	12	457.2	101.6	100
+13	12	13	457.2	101.6	100
+14	13	14	457.2	101.6	100
+15	14	15	457.2	76.2	100
+16	2	16	457.2	203.2	100
+17	16	17	457.2	152.4	100
+18	17	18	457.2	152.4	100
+19	4	19	457.2	152.4	100
+20	19	20	457.2	101.6	100
+21	20	21	457.2	101.6	100
+22	1	2	914.4	304.8	100
+23	2	4	914.4	254.0	100
+24	4	6	914.4	203.2	100
+25	6	8	914.4	203.2	100
+26	8	10	914.4	152.4	100
+27	10	12	914.4	152.4	100
+28	12	14	914.4	101.6	100
+29	14	15	914.4	101.6	100
+
+[COORDS]
+;Node	X	Y
+0	100	100
+1	200	100
+2	300	100
+3	400	100
+4	500	100
+5	600	100
+6	700	100
+7	800	100
+8	900	100
+9	1000	100
+10	1100	100
+11	1200	100
+12	1300	100
+13	1400	100
+14	1500	100
+15	1600	100
+16	300	200
+17	300	300
+18	300	400
+19	500	200
+20	500	300
+21	500	400
+
+[PATTERNS]
+;ID	Multipliers
+1	1.0	1.2	1.4	1.6	1.4	1.2	1.0	0.8	0.6	0.4	0.6	0.8
+
+[CURVES]
+;ID	X-Value	Y-Value
+
+[DEMANDS]
+;Junction	Demand	Pattern	Category
+
+[EMITTERS]
+
+[SOURCES]
+;Node	Tank	Quality	Pattern
+
+[QUALITY]
+
+[STATUS]
+
+[CONTROLS]
+
+[RULES]
+
+[PUMPS]
+
+[VALVES]
+
+[METERS]
+
+[TAGS]
+
+[ENERGY]
+
+[REACTIONS]
+
+[MIXING]
+
+[TIMES]
+Duration	24:00
+Hydraulic Timestep	1:00
+Quality Timestep	0:05
+Pattern Timestep	1:00
+Pattern Start	0:00
+Report Timestep	1:00
+Report Start	0:00
+Start ClockTime	12:00 am
+Statistic	NONE
+
+[REPORT]
+Page	0
+
+[OPTIONS]
+Units	LPS
+Headloss	H-W
+Specific Gravity	1.0
+Viscosity	1.0
+Trials	100
+Accuracy	0.001
+CHECKFREQ	2
+MAXCHECKS	10
+DAMPLIMIT	0
+Pattern	1
+Demand Multiplier	1.0
+Emitter Exponent	0.5
+Quality	None	mg/L
+Diffusivity	1.0
+Tolerence	0.01
+MAP	anytown.map
+
+[COORDINATES]
+;Nodal coordinates remain in [COORDS] section
+
+[VERTICES]
+
+[LABELS]
+
+[BACKDROP]
+DIMENSIONS	0	0	1700	500
+UNITS	None
+FILE	anytown.bmp
+OFFSET	0	0
+
+[END]
