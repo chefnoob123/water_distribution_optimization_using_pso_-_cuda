@@ -44,8 +44,21 @@ def parse_args():
     parser.add_argument(
         "--no-cuda", action="store_true", help="Disable CUDA even if available"
     )
-    parser.add_argument("--verbose", action="store_true", help="Enable verbose output")
+    parser.add_argument("--verbose", action="store_true",
+                        help="Enable verbose output")
     return parser.parse_args()
+
+
+# Standard commercial sizes in mm
+COMMERCIAL_DIAMS = np.array(
+    [50.8, 101.6, 152.4, 203.2, 254.0, 304.8, 355.6, 406.4, 457.2, 508.0])
+
+
+def map_to_commercial(diameters):
+    """Snaps continuous PSO values to the nearest commercial pipe size."""
+    # Reshape for broadcasting
+    idx = (np.abs(COMMERCIAL_DIAMS[:, None] - diameters)).argmin(axis=0)
+    return COMMERCIAL_DIAMS[idx]
 
 
 def create_fitness_function(network):
@@ -99,7 +112,8 @@ def create_fitness_function(network):
                 D_m = max(diameters[pid], 1.0) / 1000.0
                 Q_m3s = max(pipe_flows.get(pid, 0.001), 0.0001) / 1000.0
                 if D_m > 0 and Q_m3s > 0:
-                    hf = 10.67 * L * (Q_m3s**1.852) / ((150**1.852) * (D_m**4.8704))
+                    hf = 10.67 * L * (Q_m3s**1.852) / \
+                        ((150**1.852) * (D_m**4.8704))
                 else:
                     hf = 0.0
                 path_head_loss += hf
@@ -142,7 +156,8 @@ def main():
             network = WaterNetwork()
             network.load_epanet_inp(args.inp_file)
         else:
-            print(f"Warning: File {args.inp_file} not found. Using Anytown instead.")
+            print(f"Warning: File {
+                  args.inp_file} not found. Using Anytown instead.")
             network = create_anytown_network()
     else:
         network = WaterNetwork()
@@ -157,7 +172,8 @@ def main():
     print(f"Decision variables (pipe diameters): {bounds.shape[0]}")
     print(f"Diameter range: {bounds[0, 0]:.1f} - {bounds[0, 1]:.1f} mm")
     print(
-        f"Original diameters: {np.mean(network.get_original_diameters()):.1f} mm (avg)"
+        f"Original diameters: {
+            np.mean(network.get_original_diameters()):.1f} mm (avg)"
     )
 
     print("\n[3/5] Initializing CUDA PSO...")
@@ -208,11 +224,13 @@ def main():
         change = ((d - orig) / orig) * 100
         direction = "↑" if change > 0 else "↓" if change < 0 else "="
         print(
-            f"  Pipe {i + 1:2d}: {d:7.1f}mm | Original: {orig:6.1f}mm | {direction}{abs(change):5.1f}%"
+            f"  Pipe {
+                i + 1:2d}: {d:7.1f}mm | Original: {orig:6.1f}mm | {direction}{abs(change):5.1f}%"
         )
 
     fitness_details, details = network.evaluate_fitness(best_diameters)
-    original_fitness, _ = network.evaluate_fitness(network.get_original_diameters())
+    original_fitness, _ = network.evaluate_fitness(
+        network.get_original_diameters())
 
     print(f"\nCost Comparison:")
     print("-" * 50)
@@ -230,7 +248,8 @@ def main():
     for i, h in enumerate(details["head"][:10]):
         pressure = h - network.node_elevations[i]
         status = "OK" if pressure >= 10 else "LOW"
-        print(f"  Node {i:2d}: Head={h:7.2f}m | Pressure={pressure:6.2f}m | {status}")
+        print(f"  Node {i:2d}: Head={h:7.2f}m | Pressure={
+              pressure:6.2f}m | {status}")
     if len(details["head"]) > 10:
         print(f"  ... and {len(details['head']) - 10} more nodes")
 

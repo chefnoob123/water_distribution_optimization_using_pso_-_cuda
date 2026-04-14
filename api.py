@@ -5,7 +5,9 @@ import time
 import threading
 import queue
 from water_network import WaterNetwork, create_anytown_network, create_balerma_network
+from main import map_to_commercial
 from pso_cuda import CUDA_PSO, ParallelPSO
+import wntr
 
 app = Flask(__name__)
 CORS(app)
@@ -13,78 +15,62 @@ CORS(app)
 result_queue = queue.Queue()
 
 
-def create_fitness_function(network):
-    pipe_lengths = network.get_pipe_lengths()
-    elevations = network.node_elevations.copy()
-    demand_nodes = network.demand_nodes
-    pipe_data = network.pipe_data
-    num_pipes = network.num_pipes
-    num_nodes = network.num_nodes
+def create_fitness_function(network_name):
+    """
+    Refactored to use WNTR for looped hydraulics.
+    """
+    # 1. Map names to actual .inp files in your repo
+    inp_files = {
+        "anytown": "networks/anytown.inp",
+        "balerma": "networks/balerma.inp"
+    }
+    inp_path = inp_files.get(network_name, "networks/anytown.inp")
 
-    def calculate_subtree_demand(node, children, demands):
-        total = demands.get(node, 0.0)
-        for child in children.get(node, []):
-            total += calculate_subtree_demand(child, children, demands)
-        return total
+    # 2. Load the model once (The Template)
+    wn = wntr.network.WaterNetworkModel(inp_path)
+    pipe_names = wn.pipe_name_list
+    junction_names = wn.junction_name_list
+
+    # Pre-calculate lengths for cost (constant)
+    lengths = np.array([wn.get_link(p).length for p in pipe_names])
 
     def fitness(diameters):
-        children = {i: [] for i in range(num_nodes)}
-        parent = [-1] * num_nodes
-        pipe_to_node = {}
+        # A. Update pipe diameters (Continuous from PSO -> Discrete/Physical)
+        # Note: PSO might give small values, ensure they are > 0
 
-        for i in range(num_pipes):
-            u = pipe_data[i]["from"]
-            v = pipe_data[i]["to"]
-            parent[v] = u
-            children[u].append(v)
-            pipe_to_node[v] = i
+        real_diams = map_to_commercial(diameters)
+        for i, d in enumerate(diameters):
+            pipe = wn.get_link(pipe_names[i])
+            # EPANET expects meters, PSO usually provides mm
+            pipe.diameter = max(d, 10.0) / 1000.0
 
-        demands = {i: network.base_demands[i] for i in range(num_nodes)}
+        # B. Run EPANET Simulator
+        try:
+            sim = wntr.sim.EpanetSimulator(wn)
+            results = sim.run_sim()
 
-        pipe_flows = {}
-        for node in range(1, num_nodes):
-            flow = calculate_subtree_demand(node, children, demands)
-            pipe_idx = pipe_to_node.get(node, -1)
-            if pipe_idx >= 0:
-                pipe_flows[pipe_idx] = flow
+            # C. Extract Pressures
+            # We take the pressure at the first timestep (0 seconds)
+            pressures = results.node['pressure'].loc[0, junction_names].values
 
-        head = np.zeros(num_nodes)
-        head[0] = elevations[0] + 50.0
+            # D. Objective 1: Minimize Construction Cost
+            # Using your heuristic: Diameter * Length * 100
+            cost = np.sum(diameters * lengths * 100.0)
 
-        for node in range(1, num_nodes):
-            path_head_loss = 0.0
-            curr = node
-            pipe_count = 0
-            while curr != 0 and parent[curr] != -1 and pipe_count < num_nodes:
-                pid = pipe_to_node.get(curr, -1)
-                if pid == -1:
-                    break
-                L = pipe_lengths[pid]
-                D_m = max(diameters[pid], 1.0) / 1000.0
-                Q_m3s = max(pipe_flows.get(pid, 0.001), 0.0001) / 1000.0
-                if D_m > 0 and Q_m3s > 0:
-                    hf = 10.67 * L * (Q_m3s**1.852) / ((150**1.852) * (D_m**4.8704))
-                else:
-                    hf = 0.0
-                path_head_loss += hf
-                curr = parent[curr]
-                pipe_count += 1
+            # E. Objective 2: Penalty for Pressure Violations
+            pressure_penalty = 0.0
+            min_required_p = 20.0  # Common benchmark for Anytown/Balerma
 
-            head[node] = head[0] - path_head_loss
+            for p in pressures:
+                if p < min_required_p:
+                    # Use squared penalty to give the PSO a "direction" back to feasibility
+                    pressure_penalty += (min_required_p - p)**2 * 50000.0
 
-        pipe_cost = np.sum(diameters * pipe_lengths * 100.0)
+            return float(cost + pressure_penalty)
 
-        pressure_penalty = 0.0
-        min_pressure = 15.0
-        penalty_factor = 10000.0
-        for node in demand_nodes:
-            if node < len(head):
-                pressure = head[node] - elevations[node]
-                if pressure < min_pressure:
-                    pressure_penalty += (min_pressure - pressure) * penalty_factor
-
-        return pipe_cost + pressure_penalty
-
+        except Exception as e:
+            # If the network is hydraulically impossible (e.g., disconnected)
+            return 1e18
     return fitness
 
 
@@ -101,7 +87,8 @@ def run_optimization_async(network_name, particles, iterations, subswarms, use_c
         fitness_func = create_fitness_function(network)
 
         original_diams = network.get_original_diameters()
-        original_fitness, original_details = network.evaluate_fitness(original_diams)
+        original_fitness, original_details = network.evaluate_fitness(
+            original_diams)
 
         pipe_lengths = network.get_pipe_lengths()
         original_cost = float(np.sum(original_diams * pipe_lengths * 100.0))
@@ -129,7 +116,8 @@ def run_optimization_async(network_name, particles, iterations, subswarms, use_c
                 pso.use_cuda = False
 
         start_time = time.time()
-        best_diameters, best_fitness = pso.optimize(fitness_func, bounds, verbose=False)
+        best_diameters, best_fitness = pso.optimize(
+            fitness_func, bounds, verbose=False)
         optimization_time = time.time() - start_time
 
         _, details = network.evaluate_fitness(best_diameters)
